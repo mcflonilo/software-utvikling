@@ -173,7 +173,7 @@ namespace consoleApp
 
             public override string ToString()
             {
-                return value + " of " + this.suit;
+                return value + " of " + suit;
             }
 
 
@@ -222,11 +222,9 @@ namespace consoleApp
             }
 
             public int getScore() {  return score; }
-            public Player(String name)
-            {
-                this.name = name;
-            }
             public String getName() { return name; }
+
+            public Player(String name){ this.name = name; }
         }
         public static void playBlackjack()
         {
