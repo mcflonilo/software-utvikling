@@ -112,24 +112,23 @@ namespace consoleApp
 
         public class Deck
         {
-            public Card[] cards = new Card[52];
             public Deck()
             {
                 var random = new Random();
                 int index = 0;
-                for(int i = 0; i <= 3; i++)
+                for (int i = 0; i <= 3; i++)
                 {
                     for (int j = 1; j <= 13; j++)
                     {
-                        cards[index] = new Card(i,j);
+                        cards[index] = new Card(i, j);
                         index++;
 
                     }
                 }
                 random.Shuffle(cards);
-                
-            }
 
+            }
+            public Card[] cards = new Card[52];
             public Card DrawCard()
             {
                 Card card = cards[0];
@@ -234,7 +233,7 @@ namespace consoleApp
                 blackjack();
                 Console.WriteLine("press any button to start again or n to end game");
                 string input= Console.ReadLine();
-                if(input == "y") { }
+                if(input == "y") { Console.Clear(); }
                 else if(input == "n") { playing = false; }
                 else { Console.WriteLine("invalid input"); }
 
