@@ -1,0 +1,6 @@
+C:\Users\lmoph\OneDrive\Skrivebord\software-utvikling\lecture1-2\consoleAppUnitTest\consoleAppUnitTest\bin\Debug\net7.0\CoverletSourceRootsMapping
+C:\Users\lmoph\OneDrive\Skrivebord\software-utvikling\lecture1-2\consoleAppUnitTest\consoleAppUnitTest\obj\Debug\net7.0\consoleApp.UnitTest.csproj.AssemblyReference.cache
+C:\Users\lmoph\OneDrive\Skrivebord\software-utvikling\lecture1-2\consoleAppUnitTest\consoleAppUnitTest\obj\Debug\net7.0\consoleApp.UnitTest.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\lmoph\OneDrive\Skrivebord\software-utvikling\lecture1-2\consoleAppUnitTest\consoleAppUnitTest\obj\Debug\net7.0\consoleApp.UnitTest.AssemblyInfoInputs.cache
+C:\Users\lmoph\OneDrive\Skrivebord\software-utvikling\lecture1-2\consoleAppUnitTest\consoleAppUnitTest\obj\Debug\net7.0\consoleApp.UnitTest.AssemblyInfo.cs
+C:\Users\lmoph\OneDrive\Skrivebord\software-utvikling\lecture1-2\consoleAppUnitTest\consoleAppUnitTest\obj\Debug\net7.0\consoleApp.UnitTest.csproj.CoreCompileInputs.cache
