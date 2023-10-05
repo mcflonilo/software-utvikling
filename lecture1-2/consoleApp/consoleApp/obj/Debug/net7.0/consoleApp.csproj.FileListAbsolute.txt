@@ -12,3 +12,17 @@ C:\Users\lmoph\OneDrive\Skrivebord\software-utvikling\lecture1-2\consoleApp\cons
 C:\Users\lmoph\OneDrive\Skrivebord\software-utvikling\lecture1-2\consoleApp\consoleApp\obj\Debug\net7.0\consoleApp.pdb
 C:\Users\lmoph\OneDrive\Skrivebord\software-utvikling\lecture1-2\consoleApp\consoleApp\obj\Debug\net7.0\consoleApp.genruntimeconfig.cache
 C:\Users\lmoph\OneDrive\Skrivebord\software-utvikling\lecture1-2\consoleApp\consoleApp\obj\Debug\net7.0\ref\consoleApp.dll
+D:\Users\lmoph\OneDrive\Skrivebord\github repos\software-utvikling\lecture1-2\consoleApp\consoleApp\bin\Debug\net7.0\consoleApp.exe
+D:\Users\lmoph\OneDrive\Skrivebord\github repos\software-utvikling\lecture1-2\consoleApp\consoleApp\bin\Debug\net7.0\consoleApp.deps.json
+D:\Users\lmoph\OneDrive\Skrivebord\github repos\software-utvikling\lecture1-2\consoleApp\consoleApp\bin\Debug\net7.0\consoleApp.runtimeconfig.json
+D:\Users\lmoph\OneDrive\Skrivebord\github repos\software-utvikling\lecture1-2\consoleApp\consoleApp\bin\Debug\net7.0\consoleApp.dll
+D:\Users\lmoph\OneDrive\Skrivebord\github repos\software-utvikling\lecture1-2\consoleApp\consoleApp\bin\Debug\net7.0\consoleApp.pdb
+D:\Users\lmoph\OneDrive\Skrivebord\github repos\software-utvikling\lecture1-2\consoleApp\consoleApp\obj\Debug\net7.0\consoleApp.GeneratedMSBuildEditorConfig.editorconfig
+D:\Users\lmoph\OneDrive\Skrivebord\github repos\software-utvikling\lecture1-2\consoleApp\consoleApp\obj\Debug\net7.0\consoleApp.AssemblyInfoInputs.cache
+D:\Users\lmoph\OneDrive\Skrivebord\github repos\software-utvikling\lecture1-2\consoleApp\consoleApp\obj\Debug\net7.0\consoleApp.AssemblyInfo.cs
+D:\Users\lmoph\OneDrive\Skrivebord\github repos\software-utvikling\lecture1-2\consoleApp\consoleApp\obj\Debug\net7.0\consoleApp.csproj.CoreCompileInputs.cache
+D:\Users\lmoph\OneDrive\Skrivebord\github repos\software-utvikling\lecture1-2\consoleApp\consoleApp\obj\Debug\net7.0\consoleApp.dll
+D:\Users\lmoph\OneDrive\Skrivebord\github repos\software-utvikling\lecture1-2\consoleApp\consoleApp\obj\Debug\net7.0\refint\consoleApp.dll
+D:\Users\lmoph\OneDrive\Skrivebord\github repos\software-utvikling\lecture1-2\consoleApp\consoleApp\obj\Debug\net7.0\consoleApp.pdb
+D:\Users\lmoph\OneDrive\Skrivebord\github repos\software-utvikling\lecture1-2\consoleApp\consoleApp\obj\Debug\net7.0\consoleApp.genruntimeconfig.cache
+D:\Users\lmoph\OneDrive\Skrivebord\github repos\software-utvikling\lecture1-2\consoleApp\consoleApp\obj\Debug\net7.0\ref\consoleApp.dll

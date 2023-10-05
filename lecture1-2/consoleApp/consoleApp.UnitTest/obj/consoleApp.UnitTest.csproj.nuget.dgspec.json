@@ -1,20 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\lmoph\\OneDrive\\Skrivebord\\software-utvikling\\lecture1-2\\consoleApp\\consoleApp.UnitTest\\consoleApp.UnitTest.csproj": {}
+    "D:\\Users\\lmoph\\OneDrive\\Skrivebord\\github repos\\software-utvikling\\lecture1-2\\consoleApp\\consoleApp.UnitTest\\consoleApp.UnitTest.csproj": {}
   },
   "projects": {
-    "C:\\Users\\lmoph\\OneDrive\\Skrivebord\\software-utvikling\\lecture1-2\\consoleApp\\consoleApp.UnitTest\\consoleApp.UnitTest.csproj": {
+    "D:\\Users\\lmoph\\OneDrive\\Skrivebord\\github repos\\software-utvikling\\lecture1-2\\consoleApp\\consoleApp.UnitTest\\consoleApp.UnitTest.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\lmoph\\OneDrive\\Skrivebord\\software-utvikling\\lecture1-2\\consoleApp\\consoleApp.UnitTest\\consoleApp.UnitTest.csproj",
+        "projectUniqueName": "D:\\Users\\lmoph\\OneDrive\\Skrivebord\\github repos\\software-utvikling\\lecture1-2\\consoleApp\\consoleApp.UnitTest\\consoleApp.UnitTest.csproj",
         "projectName": "consoleApp.UnitTest",
-        "projectPath": "C:\\Users\\lmoph\\OneDrive\\Skrivebord\\software-utvikling\\lecture1-2\\consoleApp\\consoleApp.UnitTest\\consoleApp.UnitTest.csproj",
-        "packagesPath": "C:\\Users\\lmoph\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\lmoph\\OneDrive\\Skrivebord\\software-utvikling\\lecture1-2\\consoleApp\\consoleApp.UnitTest\\obj\\",
+        "projectPath": "D:\\Users\\lmoph\\OneDrive\\Skrivebord\\github repos\\software-utvikling\\lecture1-2\\consoleApp\\consoleApp.UnitTest\\consoleApp.UnitTest.csproj",
+        "packagesPath": "D:\\Users\\lmoph\\.nuget\\packages\\",
+        "outputPath": "D:\\Users\\lmoph\\OneDrive\\Skrivebord\\github repos\\software-utvikling\\lecture1-2\\consoleApp\\consoleApp.UnitTest\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
         "configFilePaths": [
-          "C:\\Users\\lmoph\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "D:\\Users\\lmoph\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -28,8 +31,8 @@
           "net7.0": {
             "targetAlias": "net7.0",
             "projectReferences": {
-              "C:\\Users\\lmoph\\OneDrive\\Skrivebord\\software-utvikling\\lecture1-2\\consoleApp\\consoleApp\\consoleApp.csproj": {
-                "projectPath": "C:\\Users\\lmoph\\OneDrive\\Skrivebord\\software-utvikling\\lecture1-2\\consoleApp\\consoleApp\\consoleApp.csproj"
+              "D:\\Users\\lmoph\\OneDrive\\Skrivebord\\github repos\\software-utvikling\\lecture1-2\\consoleApp\\consoleApp\\consoleApp.csproj": {
+                "projectPath": "D:\\Users\\lmoph\\OneDrive\\Skrivebord\\github repos\\software-utvikling\\lecture1-2\\consoleApp\\consoleApp\\consoleApp.csproj"
               }
             }
           }
@@ -89,17 +92,20 @@
         }
       }
     },
-    "C:\\Users\\lmoph\\OneDrive\\Skrivebord\\software-utvikling\\lecture1-2\\consoleApp\\consoleApp\\consoleApp.csproj": {
+    "D:\\Users\\lmoph\\OneDrive\\Skrivebord\\github repos\\software-utvikling\\lecture1-2\\consoleApp\\consoleApp\\consoleApp.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\lmoph\\OneDrive\\Skrivebord\\software-utvikling\\lecture1-2\\consoleApp\\consoleApp\\consoleApp.csproj",
+        "projectUniqueName": "D:\\Users\\lmoph\\OneDrive\\Skrivebord\\github repos\\software-utvikling\\lecture1-2\\consoleApp\\consoleApp\\consoleApp.csproj",
         "projectName": "consoleApp",
-        "projectPath": "C:\\Users\\lmoph\\OneDrive\\Skrivebord\\software-utvikling\\lecture1-2\\consoleApp\\consoleApp\\consoleApp.csproj",
-        "packagesPath": "C:\\Users\\lmoph\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\lmoph\\OneDrive\\Skrivebord\\software-utvikling\\lecture1-2\\consoleApp\\consoleApp\\obj\\",
+        "projectPath": "D:\\Users\\lmoph\\OneDrive\\Skrivebord\\github repos\\software-utvikling\\lecture1-2\\consoleApp\\consoleApp\\consoleApp.csproj",
+        "packagesPath": "D:\\Users\\lmoph\\.nuget\\packages\\",
+        "outputPath": "D:\\Users\\lmoph\\OneDrive\\Skrivebord\\github repos\\software-utvikling\\lecture1-2\\consoleApp\\consoleApp\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
         "configFilePaths": [
-          "C:\\Users\\lmoph\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "D:\\Users\\lmoph\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [

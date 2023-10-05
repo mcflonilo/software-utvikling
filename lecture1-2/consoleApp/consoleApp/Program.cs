@@ -4,7 +4,7 @@ using System.Net.NetworkInformation;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
-static class RandomExtensions
+static class arrayShuffler
 {
     public static void Shuffle<T>(this Random rng, T[] array)
     {
@@ -21,64 +21,183 @@ static class RandomExtensions
 namespace consoleApp
 {
 
-    public interface IRepository
+    #region bases
+    public abstract class Pizza
     {
-        List<User> GetUsers();
+        public string Name { get; set; } = "";
+        protected double _price;
+        protected string _description = "";
+        public abstract double GetPrice();
+        public abstract string GetDescription();
     }
-    public class User
+    public abstract class PizzaDecorator : Pizza
     {
-        public int Id { get; set; }
-        public string Name { get; set; } = string.Empty;
-        public string Email { get; set; }
-        public string Password { get; set; }
-        public User(int id, String name)
+        private Pizza _pizza;
+
+        protected PizzaDecorator(Pizza pizza)
         {
-            Id = id;
-            Name = name;
+            _pizza = pizza;
         }
 
-    }
-    public class UserHandler
-    {
-        private IRepository _repository;
-        public UserHandler(IRepository repository) {
-         _repository = repository;
-        }
-        public void PrintAllUsers()
+        public override string GetDescription()
         {
-            List<User> users = _repository.GetUsers();
-            foreach (User user in users) {
-                Console.WriteLine(user.Name);
-            }
+            return _pizza.GetDescription();
         }
-    }
-    public class MySQLRepository : IRepository
-    {
-        public List<User> GetUsers()
+
+        public override double GetPrice()
         {
-            List<User> users = new();
-            users.Add(new User(1, "sydgfy"));
-            users.Add(new User(2, "efe"));
-            return users;
+            return _pizza.GetPrice();
         }
     }
-    public class JSONRepository : IRepository
+    #endregion
+
+    #region concreteComponents
+    public class PlainPizza : Pizza
     {
-        public List<User> GetUsers()
+        public PlainPizza(double price)
         {
-            List<User> users = new();
-            users.Add(new User(1, "sydgfy"));
-            users.Add(new User(2, "efe"));
-            return users;
+            Name = "Margherita";
+            _description = "Tomato sauce, mozzarella, oregano";
+            _price = price;
+        }
+        // This method returns the price of the pizza object with all toppings.
+        public override double GetPrice()
+        {
+            return _price;
+        }
+        // This method returns the description of the pizza object with all toppings.
+        public override string GetDescription()
+        {
+            return _description;
         }
     }
+    public class MeatLover : Pizza
+    {
+        public MeatLover(double price)
+        {
+            Name = "MeatLover";
+            _description = "Tomato sauce, mozzarella, bacon, ham, pepperoni";
+            _price = price;
+        }
+        // This method returns the price of the pizza object with all toppings.
+        public override double GetPrice()
+        {
+            return _price;
+        }
+        // This method returns the description of the pizza object with all toppings.
+        public override string GetDescription()
+        {
+            return _description;
+        }
+    }
+    #endregion
+
+    #region ConcreteDecorators
+
+    class extraHam : PizzaDecorator
+    {
+        public extraHam(Pizza original) : base(original)
+        {
+
+        }
+
+        public override string GetDescription()
+        {
+            return base.GetDescription()+ " + extra ham";
+        }
+        public override double GetPrice()
+        {
+            return base.GetPrice()+3;
+        }
+    }
+    class extraPepperoni : PizzaDecorator
+    {
+        public extraPepperoni(Pizza original) : base(original)
+        {
+
+        }
+
+        public override string GetDescription()
+        {
+            return base.GetDescription() + " + extra pepperoni";
+        }
+        public override double GetPrice()
+        {
+            return base.GetPrice() + 3;
+        }
+    }
+
+
+    #endregion
 
     public class Program
     {
         static void Main(string[] args)
         {
+            MeatLover meatlover = new MeatLover(10);
+            Console.WriteLine(meatlover.GetDescription());
+            extraHam meatloverExtra = new extraHam(meatlover);
+            Console.WriteLine(meatloverExtra.GetDescription());
+
+
+
             UserHandler userHandler = new(new JSONRepository()) ;
             userHandler.PrintAllUsers();
+        }
+
+
+        public interface IRepository
+        {
+            List<User> GetUsers();
+        }
+        public class User
+        {
+            public int Id { get; set; }
+            public string Name { get; set; } = string.Empty;
+            public string Email { get; set; }
+            public string Password { get; set; }
+            public User(int id, String name)
+            {
+                Id = id;
+                Name = name;
+            }
+
+        }
+        public class UserHandler
+        {
+            private IRepository _repository;
+            public UserHandler(IRepository repository)
+            {
+                _repository = repository;
+            }
+            public void PrintAllUsers()
+            {
+                List<User> users = _repository.GetUsers();
+                foreach (User user in users)
+                {
+                    Console.WriteLine(user.Name);
+                }
+            }
+        }
+        public class MySQLRepository : IRepository
+        {
+            public List<User> GetUsers()
+            {
+                List<User> users = new();
+                users.Add(new User(1, "sydgfy"));
+                users.Add(new User(2, "efe"));
+                return users;
+            }
+        }
+        public class JSONRepository : IRepository
+        {
+            public List<User> GetUsers()
+            {
+                List<User> users = new();
+                users.Add(new User(1, "sydgfy"));
+                users.Add(new User(2, "efe"));
+                return users;
+            }
         }
 
         #region fraction and operator overloads
