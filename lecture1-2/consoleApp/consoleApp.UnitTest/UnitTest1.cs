@@ -106,6 +106,16 @@ using static consoleApp.Program;
         double expected = 0.25;
         Assert.AreEqual(expected, convert);
     }
+    [Test]
+    public void addAndReadDataTest() 
+    {
+        Student student = new Student();
+        student.Name = "johnny test";
+        student.phoneNumber = "1234567890";
+        student.EducationId = 1;
+        addStudent(student);
+        Assert.AreEqual(getStudentLINQ(),student);
+    }
 
 
 }

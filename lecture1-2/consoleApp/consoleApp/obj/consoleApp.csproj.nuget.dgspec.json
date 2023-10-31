@@ -1,23 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Users\\lmoph\\OneDrive\\Skrivebord\\github repos\\software-utvikling\\lecture1-2\\consoleApp\\consoleApp\\consoleApp.csproj": {}
+    "C:\\Users\\lmoph\\OneDrive\\Skrivebord\\software-utvikling\\lecture1-2\\consoleApp\\consoleApp\\consoleApp.csproj": {}
   },
   "projects": {
-    "D:\\Users\\lmoph\\OneDrive\\Skrivebord\\github repos\\software-utvikling\\lecture1-2\\consoleApp\\consoleApp\\consoleApp.csproj": {
+    "C:\\Users\\lmoph\\OneDrive\\Skrivebord\\software-utvikling\\lecture1-2\\consoleApp\\consoleApp\\consoleApp.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Users\\lmoph\\OneDrive\\Skrivebord\\github repos\\software-utvikling\\lecture1-2\\consoleApp\\consoleApp\\consoleApp.csproj",
+        "projectUniqueName": "C:\\Users\\lmoph\\OneDrive\\Skrivebord\\software-utvikling\\lecture1-2\\consoleApp\\consoleApp\\consoleApp.csproj",
         "projectName": "consoleApp",
-        "projectPath": "D:\\Users\\lmoph\\OneDrive\\Skrivebord\\github repos\\software-utvikling\\lecture1-2\\consoleApp\\consoleApp\\consoleApp.csproj",
-        "packagesPath": "D:\\Users\\lmoph\\.nuget\\packages\\",
-        "outputPath": "D:\\Users\\lmoph\\OneDrive\\Skrivebord\\github repos\\software-utvikling\\lecture1-2\\consoleApp\\consoleApp\\obj\\",
+        "projectPath": "C:\\Users\\lmoph\\OneDrive\\Skrivebord\\software-utvikling\\lecture1-2\\consoleApp\\consoleApp\\consoleApp.csproj",
+        "packagesPath": "C:\\Users\\lmoph\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\lmoph\\OneDrive\\Skrivebord\\software-utvikling\\lecture1-2\\consoleApp\\consoleApp\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
-        ],
         "configFilePaths": [
-          "D:\\Users\\lmoph\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\lmoph\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -42,6 +39,22 @@
       "frameworks": {
         "net7.0": {
           "targetAlias": "net7.0",
+          "dependencies": {
+            "Microsoft.Data.Sqlite": {
+              "target": "Package",
+              "version": "[7.0.12, )"
+            },
+            "Microsoft.EntityFrameworkCore.Sqlite": {
+              "target": "Package",
+              "version": "[7.0.12, )"
+            },
+            "Microsoft.EntityFrameworkCore.Tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[7.0.12, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",

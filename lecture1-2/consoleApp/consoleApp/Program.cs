@@ -1,7 +1,12 @@
-﻿using System.Collections;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using System.Collections;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Net.NetworkInformation;
 using System.Numerics;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 static class arrayShuffler
@@ -21,131 +26,410 @@ static class arrayShuffler
 namespace consoleApp
 {
 
-    #region bases
-    public abstract class Pizza
-    {
-        public string Name { get; set; } = "";
-        protected double _price;
-        protected string _description = "";
-        public abstract double GetPrice();
-        public abstract string GetDescription();
-    }
-    public abstract class PizzaDecorator : Pizza
-    {
-        private Pizza _pizza;
-
-        protected PizzaDecorator(Pizza pizza)
-        {
-            _pizza = pizza;
-        }
-
-        public override string GetDescription()
-        {
-            return _pizza.GetDescription();
-        }
-
-        public override double GetPrice()
-        {
-            return _pizza.GetPrice();
-        }
-    }
-    #endregion
-
-    #region concreteComponents
-    public class PlainPizza : Pizza
-    {
-        public PlainPizza(double price)
-        {
-            Name = "Margherita";
-            _description = "Tomato sauce, mozzarella, oregano";
-            _price = price;
-        }
-        // This method returns the price of the pizza object with all toppings.
-        public override double GetPrice()
-        {
-            return _price;
-        }
-        // This method returns the description of the pizza object with all toppings.
-        public override string GetDescription()
-        {
-            return _description;
-        }
-    }
-    public class MeatLover : Pizza
-    {
-        public MeatLover(double price)
-        {
-            Name = "MeatLover";
-            _description = "Tomato sauce, mozzarella, bacon, ham, pepperoni";
-            _price = price;
-        }
-        // This method returns the price of the pizza object with all toppings.
-        public override double GetPrice()
-        {
-            return _price;
-        }
-        // This method returns the description of the pizza object with all toppings.
-        public override string GetDescription()
-        {
-            return _description;
-        }
-    }
-    #endregion
-
-    #region ConcreteDecorators
-
-    class extraHam : PizzaDecorator
-    {
-        public extraHam(Pizza original) : base(original)
-        {
-
-        }
-
-        public override string GetDescription()
-        {
-            return base.GetDescription()+ " + extra ham";
-        }
-        public override double GetPrice()
-        {
-            return base.GetPrice()+3;
-        }
-    }
-    class extraPepperoni : PizzaDecorator
-    {
-        public extraPepperoni(Pizza original) : base(original)
-        {
-
-        }
-
-        public override string GetDescription()
-        {
-            return base.GetDescription() + " + extra pepperoni";
-        }
-        public override double GetPrice()
-        {
-            return base.GetPrice() + 3;
-        }
-    }
-
-
-    #endregion
 
     public class Program
     {
         static void Main(string[] args)
         {
-            MeatLover meatlover = new MeatLover(10);
-            Console.WriteLine(meatlover.GetDescription());
-            extraHam meatloverExtra = new extraHam(meatlover);
-            Console.WriteLine(meatloverExtra.GetDescription());
+            SeaLogistics seaLogistics = new SeaLogistics();
+            Ship ship = seaLogistics.createTransport();
+            seaLogistics.planDelivery();
+        }
+
+        #region singleton
+
+        public sealed class Singleton // not thread safe
+        {
+            private static Singleton? singleton = null;
+            private Singleton() { }
+
+            public Singleton GetSingleton()
+            {
+                if(singleton == null) singleton = new Singleton();
+                return singleton;
+            }
+        }
+
+        #endregion
+
+        #region factory
 
 
+        //factory containing all creators of objects
+        public abstract class Logistics
+        {
 
-            UserHandler userHandler = new(new JSONRepository()) ;
-            userHandler.PrintAllUsers();
+            public abstract Transport createTransport();
+
+            public virtual void planDelivery()
+            {
+                Transport transport = createTransport();
+                transport.deliver();
+            }
+
+        }
+
+        //creator of objects
+        public class RoadLogistics : Logistics
+        {
+            public override Truck createTransport()
+            {
+                return new Truck();
+            }
+        }
+        public class SeaLogistics : Logistics
+        {
+            public override Ship createTransport()
+            {
+                return new Ship();
+            }
         }
 
 
+
+        //interface for object type
+        public interface Transport
+        {
+            public void deliver()
+            {
+
+            }
+        }
+
+        //created objects
+        public class Truck : Transport
+        {
+            public void deliver() { Console.WriteLine("package delivered by road"); }
+        }
+        public class Ship : Transport
+        {
+            public void deliver() { Console.WriteLine("package delivered by sea"); }
+        }
+
+
+        #endregion
+
+        #region EFCore & linq
+        #region functions
+        static public void deleteAllData() 
+        {
+            using SchoolDbContext db = new();
+        }
+
+        static public void addEducation(Education education)
+        {
+            using SchoolDbContext db = new();
+            db.Add(education);
+            db.SaveChanges();
+            int latestId = education.Id;
+        }
+        static public void addStudent(Student student)
+        {
+            using SchoolDbContext db = new();
+            db.Add(student);
+            db.SaveChanges();
+            int latestId = student.Id;
+        }
+        static public void addTeacher(Teacher teacher)
+        {
+            using SchoolDbContext db = new();
+            db.Add(teacher);
+            db.SaveChanges();
+            int latestId = teacher.Id;
+        }
+        static public void addStudents(List<Student> students)
+        {
+            using SchoolDbContext db = new();
+            db.AddRange(students);
+            db.SaveChanges();
+        }
+        static public void getStudentNamesLINQ()
+        {
+            using SchoolDbContext db = new();
+            IList<string> studentNames = db.students.Select(s => s.Name).ToList();
+            foreach (string studentName in studentNames)
+            {
+                Console.WriteLine(studentName);
+            }
+        }
+        static public void getTeacherLINQ()
+        {
+            using SchoolDbContext db = new();
+            Teacher teacher = db.teacher
+                .Include(e => e.Teaches)
+                .FirstOrDefault(e => e.Name == "tomas");
+            if (teacher != null)
+            {
+                Console.WriteLine($"{teacher.Id}: {teacher.Name} | {teacher.Teaches.Id}: {teacher.Teaches.Name}");
+
+            }
+
+        }
+        static public Student getStudentLINQ()
+        {
+            using SchoolDbContext db = new();
+            Student student = db.students
+                .Include(e => e.Name)
+                .FirstOrDefault(e => e.Name == "tomas");
+            if (student != null)
+            {
+                Console.WriteLine($"{student.Id}: {student.Name} | {student.Id}: {student.Name}");
+                return student;
+            }
+            else return null;
+
+        }
+        static public void getStudentEducationLINQ()
+        {
+            using SchoolDbContext db = new();
+            Education education = db.education
+                .Include(e => e.Students)
+                .FirstOrDefault(e => e.Name == "Data Science");
+            if (education != null)
+            {
+                foreach (Student student in education.Students)
+                {
+                    Console.WriteLine($"{education.Id}: {education.Name} | {student.Id}: {student.Name}");
+                }
+            }
+        }
+        public static Student? UpdateStudentChangeNameLINQ(int id, string name)
+        {
+            using SchoolDbContext db = new();
+            Student? student = db.students.SingleOrDefault(s => s.Id == id);
+            if (student != null)
+            {
+                student.Name = name;
+                db.Update(student);
+                db.SaveChanges();
+            }
+            return student;
+        }
+        public static Student? DeleteStudentLINQ(int id)
+        {
+            using SchoolDbContext db = new();
+            Student? student = db.students.SingleOrDefault(s => s.Id == id);
+            if (student != null)
+            {
+                db.Remove(student);
+                db.SaveChanges();
+            }
+            return student;
+        }
+        #endregion
+        #region tables
+        public class Student
+        {
+            public int Id { get; set;} //PK
+            public string Name { get; set; } = "";
+            public int EducationId { get; set; } //FK
+            
+            [MaxLength(8)]
+            public string phoneNumber { get; set; } = "0000 0000";
+
+            public Education? Education { get; set; }//Navigation property
+            public override String ToString()
+            {
+                return "Id:"+Id +", name:"+ Name;
+            }
+            protected static void OnModelCreating(ModelBuilder modelBuilder)
+            {
+                modelBuilder.Entity<Student>().HasKey(c => c.Id);
+                modelBuilder.Entity<Student>().Property(e => e.Name).IsRequired();
+                modelBuilder.Entity<Student>().Property(e => e.EducationId).IsRequired();
+
+            }
+
+        }
+        public class Course
+        {
+            int id { get; set; }
+            public string Name { get; set; }
+            int studentCapacity { get; set; }
+            protected static void OnModelCreating(ModelBuilder modelBuilder)
+            {
+                modelBuilder.Entity<Course>().HasKey(c => c.id);
+                modelBuilder.Entity<Course>().Property(e => e.id).ValueGeneratedOnAdd();
+                modelBuilder.Entity<Course>().Property(e => e.Name).IsRequired();
+            }
+        }
+        public class EducationCourse
+        {
+            int EducationId { get; set; }
+            int CourseId { get; set; }
+
+            protected static void OnModelCreating(ModelBuilder modelBuilder)
+            {
+                modelBuilder.Entity<EducationCourse>().HasKey(c => new { c.EducationId, c.CourseId });
+            }
+        }
+        public class Teacher
+        {
+            public int Id { get; set; }//PK
+            public string Name { get; set; } = string.Empty;
+
+            public Education? Teaches { get; set; }//Navigation property
+
+            public override String ToString()
+            {
+                return "Id:" + Id + ", name:" + Name + "teaches" + Teaches;
+            }
+
+        }
+        public class Education
+        {
+            public int Id { get; set; }//PK
+            public string Name { get; set; } = "";
+
+            public ICollection<Student>? Students { get; set; } //Navigation property
+            public override String ToString()
+            {
+                return "Id:" + Id + ", name:" + Name;
+            }
+        }
+        public class SchoolDbContext : DbContext 
+        {
+            public DbSet<Student> students => Set<Student>();
+            public DbSet<Education> education => Set<Education>();
+            public DbSet<Teacher> teacher => Set<Teacher>();
+            public DbSet<Course> course => Set<Course>();
+            public DbSet<EducationCourse> EducationCourse => Set<EducationCourse>();
+
+            protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+            {
+                optionsBuilder.UseSqlite(@"Data source = resources/school.db");
+            }
+            protected override void OnModelCreating(ModelBuilder modelBuilder)
+            {
+                foreach (IMutableEntityType entityType in modelBuilder.Model.GetEntityTypes())
+                {
+                    MethodInfo method = entityType.ClrType.GetMethod("OnModelCreating",
+                    BindingFlags.Static | BindingFlags.NonPublic);
+                    if (method is not null)
+                    {
+                        method.Invoke(null, new object[] { modelBuilder });
+                    }
+                }
+            }
+
+        }
+        #endregion
+
+
+        #endregion
+
+        #region decorators
+        #region bases
+        public abstract class Pizza
+        {
+            public string Name { get; set; } = "";
+            protected double _price;
+            protected string _description = "";
+            public abstract double GetPrice();
+            public abstract string GetDescription();
+        }
+        public abstract class PizzaDecorator : Pizza
+        {
+            private Pizza _pizza;
+
+            protected PizzaDecorator(Pizza pizza)
+            {
+                _pizza = pizza;
+            }
+
+            public override string GetDescription()
+            {
+                return _pizza.GetDescription();
+            }
+
+            public override double GetPrice()
+            {
+                return _pizza.GetPrice();
+            }
+        }
+        #endregion
+
+        #region concreteComponents
+        public class PlainPizza : Pizza
+        {
+            public PlainPizza(double price)
+            {
+                Name = "Margherita";
+                _description = "Tomato sauce, mozzarella, oregano";
+                _price = price;
+            }
+            // This method returns the price of the pizza object with all toppings.
+            public override double GetPrice()
+            {
+                return _price;
+            }
+            // This method returns the description of the pizza object with all toppings.
+            public override string GetDescription()
+            {
+                return _description;
+            }
+        }
+        public class MeatLover : Pizza
+        {
+            public MeatLover(double price)
+            {
+                Name = "MeatLover";
+                _description = "Tomato sauce, mozzarella, bacon, ham, pepperoni";
+                _price = price;
+            }
+            // This method returns the price of the pizza object with all toppings.
+            public override double GetPrice()
+            {
+                return _price;
+            }
+            // This method returns the description of the pizza object with all toppings.
+            public override string GetDescription()
+            {
+                return _description;
+            }
+        }
+        #endregion
+
+        #region ConcreteDecorators
+
+        class extraHam : PizzaDecorator
+        {
+            public extraHam(Pizza original) : base(original)
+            {
+
+            }
+
+            public override string GetDescription()
+            {
+                return base.GetDescription() + " + extra ham";
+            }
+            public override double GetPrice()
+            {
+                return base.GetPrice() + 3;
+            }
+        }
+        class extraPepperoni : PizzaDecorator
+        {
+            public extraPepperoni(Pizza original) : base(original)
+            {
+
+            }
+
+            public override string GetDescription()
+            {
+                return base.GetDescription() + " + extra pepperoni";
+            }
+            public override double GetPrice()
+            {
+                return base.GetPrice() + 3;
+            }
+        }
+
+
+        #endregion
+        #endregion
+
+        #region interface lureri
         public interface IRepository
         {
             List<User> GetUsers();
@@ -199,6 +483,7 @@ namespace consoleApp
                 return users;
             }
         }
+        #endregion
 
         #region fraction and operator overloads
         public class Fraction
