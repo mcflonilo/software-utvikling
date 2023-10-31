@@ -1,9 +1,17 @@
-﻿using System.Collections;
+﻿using Microsoft.Data.Sqlite;
+using Newtonsoft.Json;
+using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Net.NetworkInformation;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
+using static consoleApp.Program;
+
+using System.Xml.Linq;
+using System.Xml.XPath;
+
 static class arrayShuffler
 {
     public static void Shuffle<T>(this Random rng, T[] array)
@@ -21,293 +29,358 @@ static class arrayShuffler
 namespace consoleApp
 {
 
-    #region bases
-    public abstract class Pizza
-    {
-        public string Name { get; set; } = "";
-        protected double _price;
-        protected string _description = "";
-        public abstract double GetPrice();
-        public abstract string GetDescription();
-    }
-    public abstract class PizzaDecorator : Pizza
-    {
-        private Pizza _pizza;
-
-        protected PizzaDecorator(Pizza pizza)
-        {
-            _pizza = pizza;
-        }
-
-        public override string GetDescription()
-        {
-            return _pizza.GetDescription();
-        }
-
-        public override double GetPrice()
-        {
-            return _pizza.GetPrice();
-        }
-    }
-    #endregion
-
-    #region concreteComponents
-    public class PlainPizza : Pizza
-    {
-        public PlainPizza(double price)
-        {
-            Name = "Margherita";
-            _description = "Tomato sauce, mozzarella, oregano";
-            _price = price;
-        }
-        // This method returns the price of the pizza object with all toppings.
-        public override double GetPrice()
-        {
-            return _price;
-        }
-        // This method returns the description of the pizza object with all toppings.
-        public override string GetDescription()
-        {
-            return _description;
-        }
-    }
-    public class MeatLover : Pizza
-    {
-        public MeatLover(double price)
-        {
-            Name = "MeatLover";
-            _description = "Tomato sauce, mozzarella, bacon, ham, pepperoni";
-            _price = price;
-        }
-        // This method returns the price of the pizza object with all toppings.
-        public override double GetPrice()
-        {
-            return _price;
-        }
-        // This method returns the description of the pizza object with all toppings.
-        public override string GetDescription()
-        {
-            return _description;
-        }
-    }
-    #endregion
-
-    #region ConcreteDecorators
-
-    class extraHam : PizzaDecorator
-    {
-        public extraHam(Pizza original) : base(original)
-        {
-
-        }
-
-        public override string GetDescription()
-        {
-            return base.GetDescription()+ " + extra ham";
-        }
-        public override double GetPrice()
-        {
-            return base.GetPrice()+3;
-        }
-    }
-    class extraPepperoni : PizzaDecorator
-    {
-        public extraPepperoni(Pizza original) : base(original)
-        {
-
-        }
-
-        public override string GetDescription()
-        {
-            return base.GetDescription() + " + extra pepperoni";
-        }
-        public override double GetPrice()
-        {
-            return base.GetPrice() + 3;
-        }
-    }
-
-
-    #endregion
 
     public class Program
     {
         static void Main(string[] args)
         {
-            MeatLover meatlover = new MeatLover(10);
-            Console.WriteLine(meatlover.GetDescription());
-            extraHam meatloverExtra = new extraHam(meatlover);
-            Console.WriteLine(meatloverExtra.GetDescription());
-
-
-
-            UserHandler userHandler = new(new JSONRepository()) ;
-            userHandler.PrintAllUsers();
+            Data data1 = new Data(2,"testefaen balla kluk", new ArrayList(),true);
+            DatabaseHandler dbHandler = new DatabaseHandler();
+            dbHandler.Insert(data1);
+            Data data = dbHandler.extractDataObject(2);
+            Console.WriteLine(data.name);
         }
-
-
-        public interface IRepository
+        #region sqlite
+        public class DatabaseHandler
         {
-            List<User> GetUsers();
-        }
-        public class User
-        {
-            public int Id { get; set; }
-            public string Name { get; set; } = string.Empty;
-            public string Email { get; set; }
-            public string Password { get; set; }
-            public User(int id, String name)
+            public DatabaseHandler(int i)
             {
-                Id = id;
-                Name = name;
+                SqliteCommand cmd = new SqliteCommand();
+
+                cmd.Connection = new SqliteConnection("Data Source = D:\\Users\\lmoph\\OneDrive\\Skrivebord\\github repos\\software-utvikling\\lecture1-2\\consoleApp\\consoleApp\\mySqliteFile.db");
+                cmd.Connection.Open();
+                cmd.CommandText = "DELETE from data";
+                cmd.ExecuteNonQuery();
+                cmd.CommandText = "DELETE from list";
+                cmd.ExecuteNonQuery();
+                cmd.Connection.Close();
+            }
+            public DatabaseHandler()
+            {
+
             }
 
-        }
-        public class UserHandler
-        {
-            private IRepository _repository;
-            public UserHandler(IRepository repository)
+            public void Insert(Data data)
             {
-                _repository = repository;
-            }
-            public void PrintAllUsers()
-            {
-                List<User> users = _repository.GetUsers();
-                foreach (User user in users)
+
+                SqliteCommand cmd = new SqliteCommand();
+
+                cmd.Connection = new SqliteConnection("Data Source = D:\\Users\\lmoph\\OneDrive\\Skrivebord\\github repos\\software-utvikling\\lecture1-2\\consoleApp\\consoleApp\\mySqliteFile.db");
+                cmd.Connection.Open();
+                cmd.CommandText = "INSERT INTO data VALUES (@id, @name, @truefalse)";
+                cmd.Parameters.AddWithValue("@id", data.id);
+                cmd.Parameters.AddWithValue("@name", data.name);
+                cmd.Parameters.AddWithValue("@truefalse", data.trueOrFalse);
+                int rowsAffected = cmd.ExecuteNonQuery();
+                cmd.Parameters.Clear();
+
+                for (int i = 0; i < data.list.Count; i++)
                 {
-                    Console.WriteLine(user.Name);
+                    cmd.CommandText = "INSERT INTO list (id,value) VALUES (@id, @value)";
+                    cmd.Parameters.AddWithValue("@id", data.id);
+                    cmd.Parameters.AddWithValue("@value", data.list[i]);
+                    cmd.ExecuteNonQuery();
+                    cmd.Parameters.Clear();
                 }
             }
-        }
-        public class MySQLRepository : IRepository
-        {
-            public List<User> GetUsers()
+            public Data extractDataObject(int i)
             {
-                List<User> users = new();
-                users.Add(new User(1, "sydgfy"));
-                users.Add(new User(2, "efe"));
-                return users;
-            }
-        }
-        public class JSONRepository : IRepository
-        {
-            public List<User> GetUsers()
-            {
-                List<User> users = new();
-                users.Add(new User(1, "sydgfy"));
-                users.Add(new User(2, "efe"));
-                return users;
-            }
-        }
+                string name = "";
+                int id = i;
+                bool trueFalse = false;
+                ArrayList list = new ArrayList();
 
-        #region fraction and operator overloads
-        public class Fraction
-        {
-            public int Numerator { get; set; }
-            public int Denominator { get; set; }
-
-            public Fraction(int numerator = 0, int denominator = 1)
-            {
-                if (denominator == 0) {throw new ArgumentOutOfRangeException(); }
-                Numerator = numerator;
-
-                Denominator = denominator;
-
-                void reduce()
+                SqliteCommand cmd = new SqliteCommand();
+                cmd.Connection = new SqliteConnection("Data Source = D:\\Users\\lmoph\\OneDrive\\Skrivebord\\github repos\\software-utvikling\\lecture1-2\\consoleApp\\consoleApp\\mySqliteFile.db");
+                cmd.Connection.Open();
+                cmd.CommandText = "select * from data where id = @id";
+                cmd.Parameters.AddWithValue("@id", i);
+                SqliteDataReader result = cmd.ExecuteReader();
+                while (result.Read())
                 {
-                    static int __gcd(int a, int b)
-                    {
-                        if (b == 0) { return a; }
-                        return __gcd(b, a % b);
-                    }
+                    trueFalse = result.GetBoolean(2);
+                    name = result.GetString(1);
+                }
+                result.Close();
 
-                    int d;
+                cmd.CommandText = "select * from list where id = @id";
+                cmd.Parameters.Clear();
+                cmd.Parameters.AddWithValue("@id", i);
+                SqliteDataReader result2 = cmd.ExecuteReader();
+                while (result2.Read())
+                {
+                    list.Add(result2.GetString(2));
+                }
+                return new Data(id,name,list,trueFalse);
 
-                    d = __gcd(this.Numerator, this.Denominator);
-                    this.Numerator = this.Numerator / d;
-                    this.Denominator = this.Denominator / d;
+            }
+
+        }
+            #endregion
+
+
+            #region fileReading and writing + json serialize deserialize
+            public class Data
+            {
+                public int id;
+                public String name;
+                public ArrayList list;
+                public bool trueOrFalse;
+                public Data()
+                {
+                    id = 0;
+                    name = "test";
+                    list = new ArrayList { "HELLO", "WORLD" };
+                    trueOrFalse = false;
+                }
+                public Data(int id, String name, ArrayList list, bool trueOrFalse)
+                {
+                    this.id = id;
+                    this.name = name;
+                    this.list = list;
+                    this.trueOrFalse = trueOrFalse;
+                }
+                public void WriteToFile()
+                {
+                    StreamWriter writer = new StreamWriter("D:\\Users\\lmoph\\OneDrive\\Skrivebord\\github repos\\software-utvikling\\lecture1-2\\consoleApp\\consoleApp\\dataFil.txt.txt");
+                    String data = JsonConvert.SerializeObject(this);
+                    writer.WriteLine(data);
+                    writer.Close();
 
                 }
-                reduce();
-            }
-            public override string ToString()
-            {
-                return $"{Numerator}/{Denominator}";
-            }
-            public double ToDouble()
-            {
-                return ((double) this.Numerator / this.Denominator);
-            }
-
-            #region operators
-
-            public static Fraction operator +(Fraction a, Fraction b)
-            {
-                int newNumerator = a.Numerator * b.Denominator + a.Denominator * b.Numerator;
-                int newDenominator = a.Denominator * b.Denominator;
-                return new Fraction(newNumerator, newDenominator);
-            }
-            public override bool Equals(object obj)
-            {
-                if ((obj == null) || ! this.GetType().Equals(obj.GetType())) return false;
-                else
+                public void InitializeFromFile(String filename)
                 {
-                    return this == (Fraction) obj;
+                    StreamReader reader = new StreamReader(filename);
+                    String data = reader.ReadLine();
+                    Data temp = JsonConvert.DeserializeObject<Data>(data);
+                    this.id = temp.id;
+                    this.name = temp.name;
+                    this.list = temp.list;
+                    this.trueOrFalse = temp.trueOrFalse;
                 }
-            }
-            public static Fraction operator *(Fraction a, Fraction b)
-            {
-                int newNumerator = a.Numerator * b.Numerator;
-                int newDenominator = a.Denominator * b.Denominator;
-                return new Fraction(newNumerator, newDenominator);
-            }
-            public static Fraction operator /(Fraction a, Fraction b)
-            {
-                int newNumerator = a.Numerator * b.Denominator;
-                int newDenominator = a.Denominator * b.Numerator;
-                return new Fraction(newNumerator, newDenominator);
-            }
-            public static Fraction operator -(Fraction a, Fraction b)
-            {
-                int newNumerator = a.Numerator * b.Denominator - a.Denominator * b.Numerator;
-                int newDenominator = a.Denominator * b.Denominator;
-                return new Fraction(newNumerator, newDenominator);
-            }
-            public static bool operator ==(Fraction a, Fraction b)
-            {
-                if (a.Denominator == b.Denominator && a.Numerator == b.Numerator) { return true; }
-                else return false;
-            }
-            public static bool operator !=(Fraction a, Fraction b)
-            {
-                if (a.Denominator == b.Denominator && a.Numerator == b.Numerator) { return !true; }
-                else return !false;
-            }
-            public static bool operator <(Fraction a, Fraction b)
-            {
-                int aNum = a.Numerator * b.Denominator;
-                int bNum = b.Numerator * a.Denominator;
-                if (aNum < bNum) { return true; }
-                else return false;
-            }
-            public static bool operator >(Fraction a, Fraction b)
-            {
-                int aNum = a.Numerator * b.Denominator;
-                int bNum = b.Numerator * a.Denominator;
-                if (aNum>bNum) { return true; }
-                else return false;
-            }
 
-            public static implicit operator double(Fraction v)
-            {
-                return (double) v.Numerator/v.Denominator;
             }
             #endregion
-        }
-        #endregion
 
-        #region inheritance example
-        public abstract class GeneralUser { public abstract void Contact(); }
+            #region decorators
+            #region bases
+            public abstract class Pizza
+            {
+                public string Name { get; set; } = "";
+                protected double _price;
+                protected string _description = "";
+                public abstract double GetPrice();
+                public abstract string GetDescription();
+            }
+            public abstract class PizzaDecorator : Pizza
+            {
+                private Pizza _pizza;
+
+                protected PizzaDecorator(Pizza pizza)
+                {
+                    _pizza = pizza;
+                }
+
+                public override string GetDescription()
+                {
+                    return _pizza.GetDescription();
+                }
+
+                public override double GetPrice()
+                {
+                    return _pizza.GetPrice();
+                }
+            }
+            #endregion
+
+            #region concreteComponents
+            public class PlainPizza : Pizza
+            {
+                public PlainPizza(double price)
+                {
+                    Name = "Margherita";
+                    _description = "Tomato sauce, mozzarella, oregano";
+                    _price = price;
+                }
+                // This method returns the price of the pizza object with all toppings.
+                public override double GetPrice()
+                {
+                    return _price;
+                }
+                // This method returns the description of the pizza object with all toppings.
+                public override string GetDescription()
+                {
+                    return _description;
+                }
+            }
+            public class MeatLover : Pizza
+            {
+                public MeatLover(double price)
+                {
+                    Name = "MeatLover";
+                    _description = "Tomato sauce, mozzarella, bacon, ham, pepperoni";
+                    _price = price;
+                }
+                // This method returns the price of the pizza object with all toppings.
+                public override double GetPrice()
+                {
+                    return _price;
+                }
+                // This method returns the description of the pizza object with all toppings.
+                public override string GetDescription()
+                {
+                    return _description;
+                }
+            }
+            #endregion
+
+            #region ConcreteDecorators
+
+            class extraHam : PizzaDecorator
+            {
+                public extraHam(Pizza original) : base(original)
+                {
+
+                }
+
+                public override string GetDescription()
+                {
+                    return base.GetDescription() + " + extra ham";
+                }
+                public override double GetPrice()
+                {
+                    return base.GetPrice() + 3;
+                }
+            }
+            class extraPepperoni : PizzaDecorator
+            {
+                public extraPepperoni(Pizza original) : base(original)
+                {
+
+                }
+
+                public override string GetDescription()
+                {
+                    return base.GetDescription() + " + extra pepperoni";
+                }
+                public override double GetPrice()
+                {
+                    return base.GetPrice() + 3;
+                }
+            }
+
+
+            #endregion
+            #endregion
+
+            #region fraction and operator overloads
+            public class Fraction
+            {
+                public int Numerator { get; set; }
+                public int Denominator { get; set; }
+
+                public Fraction(int numerator = 0, int denominator = 1)
+                {
+                    if (denominator == 0) { throw new ArgumentOutOfRangeException(); }
+                    Numerator = numerator;
+
+                    Denominator = denominator;
+
+                    void reduce()
+                    {
+                        static int __gcd(int a, int b)
+                        {
+                            if (b == 0) { return a; }
+                            return __gcd(b, a % b);
+                        }
+
+                        int d;
+
+                        d = __gcd(this.Numerator, this.Denominator);
+                        this.Numerator = this.Numerator / d;
+                        this.Denominator = this.Denominator / d;
+
+                    }
+                    reduce();
+                }
+                public override string ToString()
+                {
+                    return $"{Numerator}/{Denominator}";
+                }
+                public double ToDouble()
+                {
+                    return ((double)this.Numerator / this.Denominator);
+                }
+
+                #region operators
+
+                public static Fraction operator +(Fraction a, Fraction b)
+                {
+                    int newNumerator = a.Numerator * b.Denominator + a.Denominator * b.Numerator;
+                    int newDenominator = a.Denominator * b.Denominator;
+                    return new Fraction(newNumerator, newDenominator);
+                }
+                public override bool Equals(object obj)
+                {
+                    if ((obj == null) || !this.GetType().Equals(obj.GetType())) return false;
+                    else
+                    {
+                        return this == (Fraction)obj;
+                    }
+                }
+                public static Fraction operator *(Fraction a, Fraction b)
+                {
+                    int newNumerator = a.Numerator * b.Numerator;
+                    int newDenominator = a.Denominator * b.Denominator;
+                    return new Fraction(newNumerator, newDenominator);
+                }
+                public static Fraction operator /(Fraction a, Fraction b)
+                {
+                    int newNumerator = a.Numerator * b.Denominator;
+                    int newDenominator = a.Denominator * b.Numerator;
+                    return new Fraction(newNumerator, newDenominator);
+                }
+                public static Fraction operator -(Fraction a, Fraction b)
+                {
+                    int newNumerator = a.Numerator * b.Denominator - a.Denominator * b.Numerator;
+                    int newDenominator = a.Denominator * b.Denominator;
+                    return new Fraction(newNumerator, newDenominator);
+                }
+                public static bool operator ==(Fraction a, Fraction b)
+                {
+                    if (a.Denominator == b.Denominator && a.Numerator == b.Numerator) { return true; }
+                    else return false;
+                }
+                public static bool operator !=(Fraction a, Fraction b)
+                {
+                    if (a.Denominator == b.Denominator && a.Numerator == b.Numerator) { return !true; }
+                    else return !false;
+                }
+                public static bool operator <(Fraction a, Fraction b)
+                {
+                    int aNum = a.Numerator * b.Denominator;
+                    int bNum = b.Numerator * a.Denominator;
+                    if (aNum < bNum) { return true; }
+                    else return false;
+                }
+                public static bool operator >(Fraction a, Fraction b)
+                {
+                    int aNum = a.Numerator * b.Denominator;
+                    int bNum = b.Numerator * a.Denominator;
+                    if (aNum > bNum) { return true; }
+                    else return false;
+                }
+
+                public static implicit operator double(Fraction v)
+                {
+                    return (double)v.Numerator / v.Denominator;
+                }
+                #endregion
+            }
+            #endregion
+
+            #region inheritance example
+            public abstract class GeneralUser { public abstract void Contact(); }
             public class MessengerUser : GeneralUser { public override void Contact() { Console.WriteLine("sending messenger message"); } }
             public class SnapchatUser : GeneralUser { public override void Contact() { Console.WriteLine("sending snapchat message"); } }
             public class EmailUser : GeneralUser { public override void Contact() { Console.WriteLine("sending email message"); } }
@@ -392,7 +465,7 @@ namespace consoleApp
             }
             #endregion
 
-        #region blackjack
+            #region blackjack
             public class Deck
             {
                 public Deck()
@@ -582,7 +655,7 @@ namespace consoleApp
             public static void endscreen(Player winner) { Console.WriteLine(winner.getName() + " is the winner"); }
             #endregion blackjack
 
-        #region basic tasks
+            #region basic tasks
             static void extractEvenNumbersFromArray(int[] numbers)
             {
                 ArrayList evenNumbers = new ArrayList();
@@ -717,3 +790,4 @@ namespace consoleApp
 
         }
     }
+

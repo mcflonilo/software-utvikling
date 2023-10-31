@@ -1,0 +1,1 @@
+{"id":69,"name":"tulletest","list":["HELLO","bæsj"],"trueOrFalse":false}
